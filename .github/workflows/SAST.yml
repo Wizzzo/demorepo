@@ -1,0 +1,32 @@
+name: SAST Pipeline
+
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sast_scan:
+    runs-on: ubuntu:latest
+
+    steps:
+    - name: Checkout
+      uses: action/checkout@v4
+
+    - name: Run SAST scan
+      run: |
+        if grep -q -r "VULNERABLE_CODE" .; then
+          echo "A critical vul was found."
+          exit 1
+        else
+          echo "SAST passed!"
+          exit 0
+        fi
+
+    - name: Build code
+      run: |
+        echo "building"
+        exit 0
